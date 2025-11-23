@@ -20,7 +20,7 @@ describe('randomNumber', () => {
         const max = 10;
         const result = randomNumber(min, max);
 
-        expect(result).toBeGraterThanOrEqual(min);
+        expect(result).toBeGreaterThanOrEqual(min);
         expect(result).toBeLessThanOrEqual(max);
     })
 });
