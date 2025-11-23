@@ -23,5 +23,8 @@
 // PS. Pamiętaj, aby zainstalować niezbędne paczki poprzez `npm i`.
 
 export default function randomNumber(min, max) {
+    if (typeof min !== 'number' || typeof max !== 'number') {
+        throw new Error('Arguments must be a number')
+    }
     return 1;
 }
