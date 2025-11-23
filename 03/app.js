@@ -23,5 +23,5 @@
 // PS. Pamiętaj, aby zainstalować niezbędne paczki poprzez `npm i`.
 
 export default function randomNumber(min, max) {
-
+    return 1;
 }
