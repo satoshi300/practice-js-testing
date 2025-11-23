@@ -30,5 +30,6 @@ export default function randomNumber(min, max) {
     if (min > max) {
         throw new Error('Min cannot be grater than max');
     }
+    
     return 1;
 }

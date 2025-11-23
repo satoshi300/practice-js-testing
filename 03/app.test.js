@@ -14,4 +14,13 @@ describe('randomNumber', () => {
     it('throws error when min is grater than max', () => {
         expect(() => randomNumber(10, 5)).toThrow();
     });
+
+    it('returns number widthin provided range', () => {
+        const min = 2;
+        const max = 10;
+        const result = randomNumber(min, max);
+
+        expect(result).toBeGraterThanOrEqual(min);
+        expect(result).toBeLessThanOrEqual(max);
+    })
 });
