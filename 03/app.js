@@ -10,8 +10,6 @@ export default function randomNumber(min, max) {
         throwError('Number is out of range');
     }
 
-    // return 1;
-
     return Math.random() * (max - min) + min;
 }
 
