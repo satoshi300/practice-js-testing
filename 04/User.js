@@ -1,28 +1,20 @@
 export default class User {
-    constructor({ email, password }) {
-        this.validateEmail(email);
-        this.validatePassword(password);
+    constructor(obj) {
+        const { email, password } = obj;
+        if (!email.includes('@')) {
+            throw new Error('Email is incorrect')
+        }
+
+        if (password.length < 8) {
+            throw new Error('Password is incorrect')
+        }
 
         this.email = email;
         this.password = password;
     }
-
-    validateEmail(email) {
-        if (!email || !email.includes('@')) {
-            throw new Error('Invalid email');
-        }
-    }
-
-    validatePassword(password) {
-        if (!password || password.length < 6) {
-            throw new Error('Invalid password');
-        }
-    }
-
     getEmail() {
         return this.email;
     }
-
     getPassword() {
         return this.password;
     }

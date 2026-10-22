@@ -1,41 +1,127 @@
-// Tym razem implementacja już istnieje. W pliku `DB.js` znajdziesz klasę, która imituje bazę danych. Przykład jej użycia mógłby wyglądać tak:
-// ```
-// const db = new DB();
-// db.insert({a: 1, b: 2})
-//     .then(() => db.insert({a: 3, b: 4}))
-//     .then(() => db.remove(2))
-//     .then(() => db.update({id: 1}))
-//     .then(() => db.getRows())
-//     .then(rows => console.log(rows)); // [{id: 1}]
-// ```
-
-// Poszczególne metody wykonują asynchronicznie operacje: zapisu, odczytu, modyfikacji i usuwania danych z bazy. Przed stworzeniem testów postaraj się zrozumieć kod, który został tutaj zamieszczony.
-
-// Napisz testy dla tej klasy – po kilka dla każdej z metod. Pamiętaj, że ten kod jest asynchroniczny. W testach sprawdzaj:
-// - poprawność działania implementacji,
-// - przypadek, w którym obietnica jest odrzucana.
-
-// Zwróć uwagę, że metoda `.async()` tylko udaje kod asynchroniczny. W rzeczywistym rozwiązaniu czegoś takiego byśmy nie implementowali, dlatego tego elementu nie testujemy.
-
-// Testy uruchomisz przez `npm run test-05`.
-
-// Jeśli znajdziesz błędy w implementacji, postaraj się je naprawić. 
-
 import DB from './DB';
-describe('DB', () => {
-    let db;
-    beforeEach(() => {
-        db = new DB();
+
+describe('.insert()', () => {
+    it('return 1 when one item inserted', async () => {
+        const db = new DB();
+        await db.insert({ id: 1, name: 'Michal' })
+        const rows = await db.getRows();
+
+        expect(rows.length).toBe(1);
+    })
+    it('reject when id nota a number', async () => {
+        expect.assertions(1)
+
+        const db = new DB();
+        try {
+            await db.insert({ id: '1', name: 'Michal' })
+            // const rows = await db.getRows();
+        } catch (err) {
+            expect(err).toBe('ID can be only number!');
+        }
+    })
+    it('reject when id duplicated', async () => {
+        expect.assertions(1)
+
+        const db = new DB();
+        try {
+            await db.insert({ id: 1, name: 'Michal' })
+            await db.insert({ id: 1, name: 'Michal Wasiak' })
+
+        } catch (err) {
+            expect(err).toBe('ID can\'t be duplicated!');
+        }
+    })
+    it('inserted data correct', async () => {
+        const data = { id: 1, name: 'Michal' }
+
+        const db = new DB();
+        const insertedData = await db.insert(data)
+
+        expect(insertedData).toEqual(data)
+    })
+});
+
+describe('.select()', () => {
+    it('select() should return row with given id', async () => {
+        const db = new DB();
+
+        const insertedRow = await db.insert({ a: 1, b: 2, c: 3 });
+        const selectedRow = await db.select(insertedRow.id);
+
+        expect(selectedRow).toEqual(insertedRow);
     });
 
-    // INSERT
-    it('insert() should add new row and generate id starting from 1', async () => {
-        const row = await db.insert(({ a: 1, b: 2 }))
+    it('.select() check if id exist', async () => {
+        expect.assertions(1)
 
-        expect(row).toHaveProperty('id', 1);
-
-        const rows = await db.getRows();
-        expect(rows).toHaveLength(1);
-        expect(rows[0]).toEqual(row);
+        const db = new DB();
+        try {
+            await db.select(1)
+        } catch (err) {
+            expect(err).toBe('ID not found')
+        }
     })
+});
+
+describe('.remove()', () => {
+    it('remove() should return row with given id', async () => {
+        const db = new DB();
+
+        const insertedRows = await db.insert({ a: 1 });
+        const removeRows = await db.remove(insertedRows.id);
+        const checkRemovedRows = await db.getRows()
+
+        expect(removeRows).toEqual('Item was remove!');
+        expect(checkRemovedRows).toHaveLength(0)
+    });
+
+    it('remove() item not found', async () => {
+        expect.assertions(1)
+        const db = new DB();
+        try {
+            await db.remove(123);
+
+        } catch (err) {
+            expect(err).toBe('Item not exist!');
+        }
+    });
+})
+
+describe('.update() should update with given id', () => {
+    it('update() should return row with given id', async () => {
+        const db = new DB();
+
+        const insertedRow = await db.insert({ a: 1 });
+
+        await db.update({ id: insertedRow.id, a: 2 })
+        const updatedRow = await db.select(insertedRow.id)
+
+        expect(updatedRow.a).toBe(2)
+
+    });
+
+    it('update() item not found', async () => {
+        expect.assertions(1)
+
+        const db = new DB();
+        try {
+            await db.update({ id: 123, a: 2 });
+
+        } catch (err) {
+            expect(err).toBe('ID not found!');
+        }
+    });
+
+    it('update() item not set', async () => {
+        expect.assertions(1)
+
+        const db = new DB();
+        try {
+            await db.update({ a: 2 });
+
+        } catch (err) {
+            expect(err).toBe('ID have to be set!');
+        }
+    });
+
 })

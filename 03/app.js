@@ -1,12 +1,24 @@
 export default function randomNumber(min, max) {
-    if (typeof min !== 'number' || typeof max !== 'number') {
-        throw new Error('Arguments must be a number')
+    if (!isNumber(min)) {
+        throwError('"min" is not a number');
+    }
+    if (!isNumber(max)) {
+        throwError('"max" is not a number');
     }
 
     if (min > max) {
-        throw new Error('Min cannot be grater than max');
+        throwError('Number is out of range');
     }
 
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    // return 1;
 
+    return Math.random() * (max - min) + min;
+}
+
+function isNumber(value) {
+    return typeof value === 'number' && !Number.isNaN(value);
+}
+
+function throwError(message) {
+    throw new Error(message)
 }

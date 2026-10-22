@@ -1,26 +1,21 @@
 import randomNumber from './app';
 
-describe('randomNumber', () => {
-    it('returns 1 when range is 1 to 1', () => {
-        expect(randomNumber(1, 1)).toBe(1);
-    });
+it('return 1 if min=1 and max=1', () => {
+    expect(randomNumber(1, 1)).toBe(1);
+})
+it('throw error if min is not a number', () => {
+    expect(() => randomNumber('1', 2)).toThrow('"min" is not a number')
+})
+it('throw error if max is not a number', () => {
+    expect(() => randomNumber(1, '2')).toThrow('"max" is not a number')
+})
 
-    it('throws error when arguments are not numbers', () => {
-        expect(() => randomNumber('a', 5)).toThrow();
-        expect(() => randomNumber(1, null)).toThrow();
-        expect(() => randomNumber(undefined, 10)).toThrow();
-    });
+it('throw error when out of range', () => {
+    expect(() => randomNumber(5, 2)).toThrow('Number is out of range')
+})
 
-    it('throws error when min is grater than max', () => {
-        expect(() => randomNumber(10, 5)).toThrow();
-    });
-
-    it('returns number widthin provided range', () => {
-        const min = 2;
-        const max = 10;
-        const result = randomNumber(min, max);
-
-        expect(result).toBeGreaterThanOrEqual(min);
-        expect(result).toBeLessThanOrEqual(max);
-    })
-});
+it('should return 50 and 100', () => {
+    const result = randomNumber(50, 100)
+    expect(result).toBeGreaterThanOrEqual(50)
+    expect(result).toBeLessThanOrEqual(100)
+})
